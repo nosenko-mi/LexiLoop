@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nmi.lexiloop.cache.Quiz
+import com.nmi.lexiloop.entity.QuizEntity
 import kotlinx.coroutines.launch
 
 class BasicScreenViewModel(private val sdk: QuizSDK) : ViewModel() {
@@ -46,5 +47,5 @@ class BasicScreenViewModel(private val sdk: QuizSDK) : ViewModel() {
 
 data class BasicScreenState(
     val isLoading: Boolean = false,
-    val quizzes: List<Quiz> = emptyList()
+    val quizzes: List<QuizEntity> = emptyList()
 )
