@@ -1,0 +1,54 @@
+import kotlin.Boolean;
+
+CREATE TABLE Quiz (
+    id INTEGER  PRIMARY KEY NOT NULL,
+    quiz_text TEXT NOT NULL
+);
+
+CREATE TABLE Answer (
+    id INTEGER NOT NULL,
+    answer_text TEXT NOT NULL,
+    is_correct INTEGER AS Boolean NOT NULL DEFAULT 0,
+    quiz_id INTEGER NOT NULL,
+    FOREIGN KEY (quiz_id) REFERENCES Quiz(id) ON DELETE CASCADE
+);
+
+insertQuiz:
+INSERT INTO Quiz(id, quiz_text)
+VALUES(?, ?);
+
+insertAnswer:
+INSERT INTO Answer(id, answer_text, is_correct, quiz_id)
+VALUES(?, ?, ?, ?);
+
+removeAllQuizzes:
+DELETE FROM Quiz;
+
+selectAllQuizzes:
+SELECT Quiz.*
+FROM Quiz;
+
+selectQuizById:
+SELECT Quiz.*
+FROM Quiz
+WHERE id = ?;
+
+selectAllAnswers:
+SELECT Answer.*
+FROM Answer;
+
+selectAnswersByQuizId:
+SELECT Answer.*
+FROM Answer
+WHERE quiz_id = ?;
+
+selectQuizzesWithAnswers:
+SELECT Quiz.*
+FROM Quiz
+INNER JOIN Answer ON Quiz.id=Answer.quiz_id;
+
+selectQuizWithAnswers:
+SELECT Quiz.*
+FROM Quiz
+INNER JOIN Answer ON Quiz.id=Answer.quiz_id
+WHERE Quiz.id = ?;
