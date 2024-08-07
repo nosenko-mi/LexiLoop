@@ -29,7 +29,7 @@ data class AnswerEntity(
 
 
 @Serializable
-data class CompleteQuiz (
+data class CompleteQuizEntity (
     val quiz: QuizEntity,
     val answers: List<AnswerEntity>
 )

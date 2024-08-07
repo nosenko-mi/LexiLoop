@@ -1,6 +1,7 @@
 package com.nmi.lexiloop.cache
 
 import com.nmi.lexiloop.entity.AnswerEntity
+import com.nmi.lexiloop.entity.CompleteQuizEntity
 import com.nmi.lexiloop.entity.QuizEntity
 
 internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
@@ -28,26 +29,45 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
         return dbQuery.selectAllAnswers(::mapAnswer).executeAsList()
     }
 
-    internal fun getCompleteQuizzes() {
-        val quizzes = dbQuery.selectAllQuizzes().executeAsList()
-        val answers = dbQuery.selectAllAnswers().executeAsList().groupBy { it.quiz_id }
+    internal fun getCompleteQuizzes(): List<CompleteQuizEntity> {
+        val quizzes = dbQuery.selectAllQuizzes(::mapQuiz).executeAsList()
+        val answers = dbQuery.selectAllAnswers(::mapAnswer).executeAsList().groupBy { it.quizId }
 
+        val completeQuizzes: MutableList<CompleteQuizEntity> = mutableListOf()
+        quizzes.forEach { quiz ->
+            val a = answers.getOrElse(quiz.id) { null }
+            if (a != null) {
+                completeQuizzes.add(CompleteQuizEntity(quiz, a))
+            }
+        }
 
+        return completeQuizzes
     }
 
-    internal fun insertQuiz(id: Long, text: String) {
-        dbQuery.insertQuiz(id, text)
+    internal fun insertQuiz(id: Long, text: String): Result<Unit> {
+        val result = dbQuery.runCatching {
+            dbQuery.insertQuiz(id, text)
+        }
+        return result
     }
 
-    internal fun insertAnswer(id: Long, text: String, isCorrect: Boolean, quizId: Long) {
-        dbQuery.insertAnswer(id, text, isCorrect, quizId)
+    internal fun insertAnswer(
+        id: Long,
+        text: String,
+        isCorrect: Boolean,
+        quizId: Long
+    ): Result<Unit> {
+        val result = dbQuery.runCatching {
+            dbQuery.insertAnswer(id, text, isCorrect, quizId)
+        }
+        return result
     }
 
-    internal fun insertCompleteQuiz(quiz: QuizEntity, answers: List<AnswerEntity>){
+    internal fun insertCompleteQuiz(quiz: QuizEntity, answers: List<AnswerEntity>) {
         dbQuery.transaction {
             dbQuery.insertQuiz(quiz.id, quiz.text)
             answers.forEach {
-                dbQuery.insertAnswer(it.id,it.text, it.isCorrect, it.quizId)
+                dbQuery.insertAnswer(it.id, it.text, it.isCorrect, it.quizId)
             }
         }
     }
