@@ -10,6 +10,10 @@ import com.nmi.lexiloop.entity.CompleteQuizEntity
 import com.nmi.lexiloop.entity.QuizEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.format.DateTimeFormatter
+import java.util.UUID
+import kotlin.random.Random
 
 class BasicScreenViewModel(private val sdk: QuizSDK) : ViewModel() {
     private val _state = mutableStateOf(BasicScreenState())
@@ -27,54 +31,54 @@ class BasicScreenViewModel(private val sdk: QuizSDK) : ViewModel() {
                 val quizzes = sdk.getAllQuizzesCache()
                 _state.value = _state.value.copy(isLoading = false, quizzes = quizzes)
             } catch (e: Exception) {
-                Log.e("BasicScreenViewModel",  e.printStackTrace().toString())
+                Log.e("BasicScreenViewModel", e.printStackTrace().toString())
                 _state.value = _state.value.copy(isLoading = false, quizzes = emptyList())
             }
         }
     }
 
-    fun loadCompleteQuizzes(){
+    fun loadCompleteQuizzes() {
         viewModelScope.launch(Dispatchers.IO) {
-            _state.value = _state.value.copy(isLoading = true, quizzes = emptyList())
+            _state.value = _state.value.copy(isLoading = true, completeQuizzes = emptyList())
             try {
                 val completeQuizzes = sdk.getAllCompleteQuizzesCache()
-                _state.value = _state.value.copy(isLoading = false, completeQuizzes = completeQuizzes)
+                _state.value =
+                    _state.value.copy(isLoading = false, completeQuizzes = completeQuizzes)
             } catch (e: Exception) {
-                Log.e("BasicScreenViewModel",  e.printStackTrace().toString())
+                Log.e("BasicScreenViewModel", e.printStackTrace().toString())
                 _state.value = _state.value.copy(isLoading = false, completeQuizzes = emptyList())
             }
         }
     }
 
-    fun insertSequence(){
+    fun insertRandomCompleteQuiz() {
         viewModelScope.launch {
-            _state.value = _state.value.copy(isLoading = true, quizzes = emptyList())
+            _state.value = _state.value.copy(isLoading = true, completeQuizzes = emptyList())
             try {
-
-                sdk.insertQuiz(1L, "quiz 1")
-//                sdk.insertQuiz(2L, "quiz 2")
-//                sdk.insertQuiz(44L, "quiz 44")
-//                sdk.insertAnswer(222, "answer 222", false, 1)
-//                sdk.insertAnswer(223, "answer 223", false, 1)
-//                sdk.insertAnswer(224, "answer 224", true, 1)
-//                sdk.insertAnswer(225, "answer 225", false, 1)
-//                sdk.insertAnswer(226, "answer 226", false, 1)
-
-//                sdk.insertCompleteQuiz(
-//                    QuizEntity(4L, "complete quiz"),
-//                    listOf(
-//                        AnswerEntity(1, 4, "answer 1", true),
-//                        AnswerEntity(2, 4, "answer 2", false),
-//                        AnswerEntity(3, 4, "answer 3", false),
-//                        AnswerEntity(3, 4, "answer 3", false),
-//                    )
-//                )
-
-                val quizzes = sdk.getAllQuizzesCache()
-                _state.value = _state.value.copy(isLoading = false, quizzes = quizzes)
+                val quizId = System.currentTimeMillis()
+                val answers: MutableList<AnswerEntity> = mutableListOf()
+                val randomIndex = Random.nextInt(0, 4)
+                for (i in 1..4) {
+                    val answerId = System.currentTimeMillis()
+                    answers.add(
+                        AnswerEntity(
+                            answerId,
+                            quizId,
+                            "random answer $answerId",
+                            i == randomIndex
+                        )
+                    )
+                }
+                sdk.insertCompleteQuiz(
+                    QuizEntity(quizId, "random quiz $quizId"),
+                    answers
+                )
+                val completeQuizzes = sdk.getAllCompleteQuizzesCache()
+                _state.value =
+                    _state.value.copy(isLoading = false, completeQuizzes = completeQuizzes)
             } catch (e: Exception) {
-                Log.e("BasicScreenViewModel",  e.printStackTrace().toString())
-                _state.value = _state.value.copy(isLoading = false, quizzes = emptyList())
+                Log.e("BasicScreenViewModel", e.printStackTrace().toString())
+                _state.value = _state.value.copy(isLoading = false, completeQuizzes = emptyList())
             }
         }
     }

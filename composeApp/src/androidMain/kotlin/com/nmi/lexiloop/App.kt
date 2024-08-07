@@ -50,8 +50,8 @@ fun App() {
                 CompleteQuizzes(state.completeQuizzes)
             }
 
-            Button(onClick = { viewModel.insertSequence() }) {
-                Text(text = "insert sequence")
+            Button(onClick = { viewModel.insertRandomCompleteQuiz() }) {
+                Text(text = "insert random quiz")
             }
 
             Button(onClick = { viewModel.loadCompleteQuizzes() }) {
