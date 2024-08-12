@@ -21,6 +21,9 @@ ktor = "2.3.7"
 sqlDelight = "2.0.0"
 lifecycleViewmodelCompose = "2.7.0"
 material3 = "1.2.0"
+mokoResources = "0.24.1"
+pytorch="2.1.0"
+accompanistPermissions="0.34.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -53,6 +56,14 @@ runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqlDelight" }
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3", version.ref="material3" }
 
+moko-resources-generator = {group="dev.icerock.moko", name = "resources-generator", version.ref="mokoResources"}
+moko-resources = {group="dev.icerock.moko", name = "resources", version.ref="mokoResources"}
+moko-resources-compose = {group="dev.icerock.moko", name = "resources-compose", version.ref="mokoResources"}
+moko-resources-test = {group="dev.icerock.moko", name = "resources-test", version.ref="mokoResources"}
+
+pytorch-android = {group="org.pytorch", name="pytorch_android_lite", version.ref="pytorch"}
+accompanist-permissions = {group="com.google.accompanist", name="accompanist-permissions", version.ref="accompanistPermissions"}
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -63,3 +74,4 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
+mokoResourcesPlugin = { id = "dev.icerock.mobile.multiplatform-resources", version.ref="mokoResources"}

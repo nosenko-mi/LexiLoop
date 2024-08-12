@@ -1,27 +1,48 @@
 package com.nmi.lexiloop
 
+import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.media.AudioFormat
+import android.media.AudioRecord
+import android.media.MediaRecorder
+import android.net.Uri
+import android.provider.Settings
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.PackageManagerCompat.LOG_TAG
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionStatus
+import com.google.accompanist.permissions.rememberPermissionState
 import com.nmi.lexiloop.entity.CompleteQuizEntity
 import com.nmi.lexiloop.entity.QuizEntity
 import org.koin.androidx.compose.koinViewModel
 
 
 @OptIn(
-    ExperimentalMaterial3Api::class
+    ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class
 )
 @Composable
 fun App() {
@@ -32,31 +53,85 @@ fun App() {
         viewModel.loadQuizzes()
         pullToRefreshState.endRefresh()
     }
-    Box(modifier = Modifier
-        .fillMaxSize(),
+    val context = LocalContext.current
+    val recordPermissionState = rememberPermissionState(Manifest.permission.RECORD_AUDIO) // experimental
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+//            record audio then recognize
+        } else {
+            viewModel.updatePermissionDialogVisibility(true)
+        }
+    }
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Column (modifier = Modifier
-            .fillMaxWidth(),
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
 
-        ) {
+            ) {
 
-            if (state.quizzes.isNotEmpty()){
-                Quizzes(state.quizzes)
+            if (state.permissionDialogVisible) {
+                AlertDialog(
+                    dialogTitle = "Record audio",
+                    dialogText = "permission is required",
+                    icon = Icons.Default.Info,
+                    dismissText = "dismiss",
+                    confirmText = "confirm",
+                    onDismissRequest = {
+                        viewModel.updatePermissionDialogVisibility(
+                            false
+                        )
+                    },
+                    onConfirmation = {
+                        openAppSettings(context)
+                        viewModel.updatePermissionDialogVisibility(false)
+                    },
+                )
             }
 
-            if (state.completeQuizzes.isNotEmpty()){
-                CompleteQuizzes(state.completeQuizzes)
+            Text(text = state.recognizedText)
+
+            Button(onClick = {
+                if (state.isRecording) {
+                    // stop recognition or smt
+                    viewModel.stopRecognition()
+                    return@Button
+                }
+                when (recordPermissionState.status) {
+                    PermissionStatus.Granted -> {
+                        // start record
+
+                        viewModel.recognize()
+                    }
+                    else -> {
+                        permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                    }
+                }
+            }) {
+                Text(text = "recognize")
             }
 
-            Button(onClick = { viewModel.insertRandomCompleteQuiz() }) {
-                Text(text = "insert random quiz")
-            }
+//            if (state.quizzes.isNotEmpty()){
+//                Quizzes(state.quizzes)
+//            }
+//
+//            if (state.completeQuizzes.isNotEmpty()){
+//                CompleteQuizzes(state.completeQuizzes)
+//            }
 
-            Button(onClick = { viewModel.loadCompleteQuizzes() }) {
-                Text(text = "complete quizzes")
-            }
+//            Button(onClick = { viewModel.insertRandomCompleteQuiz() }) {
+//                Text(text = "insert random quiz")
+//            }
+
+//            Button(onClick = { viewModel.loadCompleteQuizzes() }) {
+//                Text(text = " get complete quizzes")
+//            }
         }
     }
 }
@@ -64,7 +139,7 @@ fun App() {
 @Composable
 fun Quizzes(quizzes: List<QuizEntity>) {
     LazyColumn {
-        items(quizzes){ q->
+        items(quizzes) { q ->
             Text("${q.id}, ${q.text}")
         }
     }
@@ -73,8 +148,62 @@ fun Quizzes(quizzes: List<QuizEntity>) {
 @Composable
 fun CompleteQuizzes(quizzes: List<CompleteQuizEntity>) {
     LazyColumn {
-        items(quizzes){ q->
+        items(quizzes) { q ->
             Text("${q.quiz.id}: ${q.answers.forEach { it.text }}")
         }
     }
+}
+
+@Composable
+fun AlertDialog(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+    dialogTitle: String,
+    dialogText: String,
+    icon: ImageVector? = null,
+//    dismissText: String = stringResource(id = R.string.dismiss_btn),
+//    confirmText: String = stringResource(id = R.string.confirm_btn),
+    dismissText: String = "dismiss",
+    confirmText: String = "confirm",
+) {
+    androidx.compose.material3.AlertDialog(
+        icon = {
+            icon?.let { Icon(it, contentDescription = "Example Icon") }
+        },
+        title = {
+            Text(text = dialogTitle)
+        },
+        text = {
+            Text(text = dialogText)
+        },
+        onDismissRequest = {
+            onDismissRequest()
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation()
+                }
+            ) {
+                Text(confirmText)
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                }
+            ) {
+                Text(dismissText)
+            }
+        }
+    )
+}
+
+fun openAppSettings(context: Context) {
+    val intent = Intent(
+        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+        Uri.fromParts("package", context.packageName, null)
+    )
+    context.startActivity(intent)
 }

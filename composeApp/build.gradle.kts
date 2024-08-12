@@ -1,3 +1,4 @@
+import dev.icerock.gradle.MRVisibility
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -10,6 +11,7 @@ plugins {
 
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.sqldelight)
+    alias(libs.plugins.mokoResourcesPlugin)
 }
 
 kotlin {
@@ -33,7 +35,10 @@ kotlin {
             implementation(libs.androidx.compose.material3)
             implementation(libs.koin.androidx.compose)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
+            implementation(libs.pytorch.android)
+            implementation(libs.accompanist.permissions)
         }
+
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -49,10 +54,18 @@ kotlin {
             implementation(libs.runtime)
             implementation(libs.kotlinx.datetime)
             implementation(libs.koin.core)
+
+            implementation(libs.moko.resources)
+            implementation(libs.moko.resources.compose) // for compose multiplatform
         }
+
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.sqldelight.jvm.driver)
+        }
+
+        commonTest.dependencies {
+            implementation(libs.moko.resources.test)
         }
     }
 }
@@ -112,4 +125,12 @@ sqldelight {
             packageName.set("com.nmi.lexiloop.cache")
         }
     }
+}
+
+multiplatformResources {
+    resourcesPackage.set("com.nmi.lexiloop") // required
+    resourcesClassName.set("MR") // optional, default MR
+    resourcesVisibility.set(MRVisibility.Internal) // optional, default Public
+//    iosBaseLocalizationRegion.set("en") // optional, default "en"
+//    iosMinimalDeploymentTarget.set("11.0") // optional, default "9.0"
 }

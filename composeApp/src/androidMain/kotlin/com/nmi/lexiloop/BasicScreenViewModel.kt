@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.nmi.lexiloop.entity.AnswerEntity
 import com.nmi.lexiloop.entity.CompleteQuizEntity
 import com.nmi.lexiloop.entity.QuizEntity
+import com.nmi.lexiloop.ml.srModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -15,12 +16,26 @@ import java.time.format.DateTimeFormatter
 import java.util.UUID
 import kotlin.random.Random
 
+// context injection
+// https://stackoverflow.com/questions/53439111/how-to-inject-application-context-from-app-module-to-network-module-using-ko
 class BasicScreenViewModel(private val sdk: QuizSDK) : ViewModel() {
     private val _state = mutableStateOf(BasicScreenState())
     val state: State<BasicScreenState> = _state
 
     init {
-        loadQuizzes()
+        srModel.load()
+    }
+
+    fun recognize(){
+        _state.value = _state.value.copy(recognizedText = "recognizing...", isRecording = true)
+    }
+
+    fun stopRecognition(){
+        _state.value = _state.value.copy(recognizedText = "stopped", isRecording = false)
+    }
+
+    fun updatePermissionDialogVisibility(visibility: Boolean){
+        _state.value = _state.value.copy(permissionDialogVisible = visibility)
     }
 
     fun loadQuizzes() {
@@ -88,4 +103,7 @@ data class BasicScreenState(
     val isLoading: Boolean = false,
     val quizzes: List<QuizEntity> = emptyList(),
     val completeQuizzes: List<CompleteQuizEntity> = emptyList(),
+    val permissionDialogVisible: Boolean = false,
+    val isRecording: Boolean = false,
+    val recognizedText: String = "init value"
 )

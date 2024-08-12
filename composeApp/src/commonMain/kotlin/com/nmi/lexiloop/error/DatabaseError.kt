@@ -1,0 +1,3 @@
+package com.nmi.lexiloop.error
+
+// sealed class. Use it with Result<T>...
