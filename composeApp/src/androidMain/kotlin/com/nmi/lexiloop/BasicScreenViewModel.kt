@@ -9,16 +9,17 @@ import com.nmi.lexiloop.entity.AnswerEntity
 import com.nmi.lexiloop.entity.CompleteQuizEntity
 import com.nmi.lexiloop.entity.QuizEntity
 import com.nmi.lexiloop.ml.srModel
+import com.nmi.lexiloop.record.AudioRecorder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.time.format.DateTimeFormatter
-import java.util.UUID
 import kotlin.random.Random
 
 // context injection
 // https://stackoverflow.com/questions/53439111/how-to-inject-application-context-from-app-module-to-network-module-using-ko
-class BasicScreenViewModel(private val sdk: QuizSDK) : ViewModel() {
+class BasicScreenViewModel(
+    private val sdk: QuizSDK,
+    private val recorder: AudioRecorder
+) : ViewModel() {
     private val _state = mutableStateOf(BasicScreenState())
     val state: State<BasicScreenState> = _state
 
@@ -26,8 +27,13 @@ class BasicScreenViewModel(private val sdk: QuizSDK) : ViewModel() {
         srModel.load()
     }
 
-    fun recognize(){
-        _state.value = _state.value.copy(recognizedText = "recognizing...", isRecording = true)
+    fun recognize6Seconds(){
+        viewModelScope.launch {
+            _state.value = _state.value.copy(recognizedText = "recognizing...", isRecording = true)
+            val buffer = recorder.recordXSeconds(6)
+            val text = srModel.runInference(buffer)
+            _state.value = _state.value.copy(recognizedText = text, isRecording = false)
+        }
     }
 
     fun stopRecognition(){

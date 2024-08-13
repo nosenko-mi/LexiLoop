@@ -14,12 +14,12 @@ import java.io.IOException
 // use application context so no memory leak happens
 // https://medium.com/@banmarkovic/what-is-context-in-android-and-which-one-should-you-use-e1a8c6529652
 actual val srModel: SpeechRecognitionModel =
-    SR(modelPath = "assets/ml/wav2vec2.ptl", context = getKoin().get())
+    SR(modelPath = "wav2vec2.ptl", context = getKoin().get())
 
 class SR(
     override val modelPath: String,
-    override val audioLenInSecond: Int = 6,
-    override val sampleRate: Int = 16000,
+    override val audioLenInSecond: Int = ModelFormat.AUDIO_LEN_IN_SECONDS,
+    override val sampleRate: Int = ModelFormat.SAMPLE_RATE,
     override val recordingLength: Int = audioLenInSecond * sampleRate,
     private val context: Context
 ) : SpeechRecognitionModel {
@@ -28,16 +28,17 @@ class SR(
 
     companion object {
         const val TAG = "SR"
+
     }
 
     init {
         load()
     }
 
-//    @Throws(RuntimeException::class)
+    @Throws(RuntimeException::class)
     override fun runInference(buffer: FloatArray): String {
         if (module == null) {
-            return "" // at this point model should be initialized. mb throw exception?
+            throw(RuntimeException("Speech recognition module is not initialized"))
         }
 
         val moduleInput = DoubleArray(recordingLength)
@@ -57,10 +58,17 @@ class SR(
     }
 
     override fun load() {
-        val modulePath = assetFilePath(modelPath) ?: return
+        val modulePath = assetFilePath(modelPath)
+        if (modulePath == null) {
+            Log.e(TAG, "Could not load asset: $modelPath")
+            return
+        }
+
         module = LiteModuleLoader.load(modulePath)
         if (module != null) {
-            Log.i(TAG, "module loaded successfully")
+            Log.i(TAG, "Speech recognition module loaded successfully")
+        } else{
+            Log.e(TAG, "Speech recognition module in not loaded")
         }
     }
 
@@ -71,6 +79,7 @@ class SR(
     // https://github.com/pytorch/android-demo-app/blob/master/SpeechRecognition/app/src/main/java/org/pytorch/demo/speechrecognition/MainActivity.java#L114
     private fun assetFilePath(assetName: String): String? {
         val file = File(context.filesDir, assetName)
+        Log.i(TAG, "Loading asset: ${file.absolutePath}")
         if (file.exists() && file.length() > 0) {
             return file.absolutePath
         }
@@ -88,7 +97,7 @@ class SR(
                 return file.absolutePath
             }
         } catch (e: IOException) {
-            Log.e(TAG, assetName + ": " + e.localizedMessage)
+            Log.e(TAG, "$assetName: ${e.localizedMessage}")
         }
         return null
     }

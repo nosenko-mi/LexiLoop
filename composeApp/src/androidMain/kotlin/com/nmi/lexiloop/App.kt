@@ -107,7 +107,7 @@ fun App() {
                     PermissionStatus.Granted -> {
                         // start record
 
-                        viewModel.recognize()
+                        viewModel.recognize6Seconds()
                     }
                     else -> {
                         permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
