@@ -37,7 +37,7 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
         quizzes.forEach { quiz ->
             val a = answers.getOrElse(quiz.id) { null }
             if (a != null) {
-                completeQuizzes.add(CompleteQuizEntity(quiz, a))
+                completeQuizzes.add(CompleteQuizEntity(quiz.id, quiz.text, a))
             }
         }
 
@@ -85,7 +85,7 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
         isCorrect: Boolean,
         quizId: Long
     ): AnswerEntity {
-        return AnswerEntity(id, quizId, text, isCorrect)
+        return AnswerEntity(id = id, quizId = quizId, text = text, isCorrect = isCorrect)
     }
 
 }

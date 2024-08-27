@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import dev.icerock.gradle.MRVisibility
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
@@ -12,6 +14,18 @@ plugins {
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.sqldelight)
     alias(libs.plugins.mokoResourcesPlugin)
+    alias(libs.plugins.buildKofnig)
+}
+
+buildscript {
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath(libs.kotlin.gradle.plugin)
+        classpath(libs.buildkonfig.gradle.plugin)
+    }
 }
 
 kotlin {
@@ -21,23 +35,11 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     jvm("desktop")
-    
+
     sourceSets {
         val desktopMain by getting
-        
-        androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.ktor.client.okhttp)
-            implementation(libs.sqldelight.android.driver)
-            implementation(libs.androidx.compose.material3)
-            implementation(libs.koin.androidx.compose)
-            implementation(libs.androidx.lifecycle.viewmodel.compose)
-            implementation(libs.pytorch.android)
-            implementation(libs.accompanist.permissions)
-        }
 
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -51,7 +53,6 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.runtime)
             implementation(libs.kotlinx.datetime)
             implementation(libs.koin.core)
 
@@ -59,7 +60,22 @@ kotlin {
             implementation(libs.moko.resources.compose) // for compose multiplatform
         }
 
+        androidMain.dependencies {
+            implementation(compose.preview)
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.client.okhttp)
+
+//            implementation(libs.ktor.client.android)
+            implementation(libs.sqldelight.android.driver)
+            implementation(libs.androidx.compose.material3)
+            implementation(libs.koin.androidx.compose)
+            implementation(libs.androidx.lifecycle.viewmodel.compose)
+            implementation(libs.pytorch.android)
+            implementation(libs.accompanist.permissions)
+        }
+
         desktopMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
             implementation(compose.desktop.currentOs)
             implementation(libs.sqldelight.jvm.driver)
         }
@@ -71,6 +87,7 @@ kotlin {
 }
 
 android {
+
     namespace = "com.nmi.lexiloop"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
@@ -91,8 +108,13 @@ android {
         }
     }
     buildTypes {
+        getByName("debug") {
+            isMinifyEnabled = false
+            manifestPlaceholders["usesCleartextTraffic"] = "true"
+        }
         getByName("release") {
             isMinifyEnabled = false
+            manifestPlaceholders["usesCleartextTraffic"] = "false"
         }
     }
     compileOptions {
@@ -100,9 +122,13 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     dependencies {
+
+//        implementation(libs.kotlinx.coroutines.android)
+
         debugImplementation(compose.uiTooling)
     }
 }
@@ -133,4 +159,26 @@ multiplatformResources {
     resourcesVisibility.set(MRVisibility.Internal) // optional, default Public
 //    iosBaseLocalizationRegion.set("en") // optional, default "en"
 //    iosMinimalDeploymentTarget.set("11.0") // optional, default "9.0"
+}
+
+buildkonfig {
+//    packageName Set the package name where BuildKonfig is being placed. Required.
+//    objectName Set the name of the generated object. Defaults to BuildKonfig.
+//    exposeObjectWithName Set the name of the generated object, and make it public.
+//    defaultConfigs Set values which you want to have in common. Required.
+
+    packageName = "com.nmi.lexiloop"
+    // objectName = "YourAwesomeConfig"
+    // exposeObjectWithName = "YourAwesomePublicConfig"
+
+    defaultConfigs {
+
+        val apiUrl: String = gradleLocalProperties(rootDir).getProperty("API_URL")
+
+        require(apiUrl.isNotEmpty()) {
+            "Get api url and store in in local.properties as `API_URL`"
+        }
+
+        buildConfigField(STRING, "API_URL", apiUrl)
+    }
 }

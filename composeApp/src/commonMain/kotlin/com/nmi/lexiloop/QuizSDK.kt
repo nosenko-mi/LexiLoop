@@ -7,23 +7,37 @@ import com.nmi.lexiloop.entity.AnswerEntity
 import com.nmi.lexiloop.entity.CompleteQuizEntity
 import com.nmi.lexiloop.entity.QuizEntity
 import com.nmi.lexiloop.network.QuizApi
+import com.nmi.lexiloop.util.NetworkError
+import com.nmi.lexiloop.util.Result
 
 class QuizSDK(databaseDriverFactory: DatabaseDriverFactory, val api: QuizApi) {
     private val database = Database(databaseDriverFactory)
 
 
     @Throws(Exception::class)
-    suspend fun getAllQuizzes(forceReload: Boolean): List<QuizEntity> {
-        val cachedQuizzes = database.getAllQuizzes()
+    suspend fun getAllQuizzes(forceReload: Boolean): Result<List<CompleteQuizEntity>, NetworkError> {
+        val cachedQuizzes = database.getCompleteQuizzes()
         return if (cachedQuizzes.isNotEmpty() && !forceReload) {
-            cachedQuizzes
+            Result.Success(cachedQuizzes)
         } else {
-            emptyList()
-//            api.getAllLaunches().also {
+            api.getAllQuizzes().also {
 //                database.clearAndCreateQuizzes(it)
-//            }
+            }
         }
     }
+
+
+//    @Throws(Exception::class)
+//    suspend fun getAllQuizzes(forceReload: Boolean): List<CompleteQuizEntity> {
+//        val cachedQuizzes = database.getCompleteQuizzes()
+//        return if (cachedQuizzes.isNotEmpty() && !forceReload) {
+//            cachedQuizzes
+//        } else {
+//            api.getAllQuizzes().also {
+////                database.clearAndCreateQuizzes(it)
+//            }
+//        }
+//    }
 
     @Throws(Exception::class)
     suspend fun getAllQuizzesCache(): List<QuizEntity> {
