@@ -17,20 +17,25 @@ data class QuizEntity(
 
 @Serializable
 data class AnswerEntity(
+    @SerialName("text")
+    val text: String,
+    @SerialName("is_correct")
+    val isCorrect: Boolean,
     @SerialName("id")
     val id: Long,
     @SerialName("quiz_id")
     val quizId: Long,
-    @SerialName("text")
-    val text: String,
-    @SerialName("is_correct")
-    val isCorrect: Boolean
 )
 
 
 @Serializable
 data class CompleteQuizEntity (
-    val quiz: QuizEntity,
+    @SerialName("id")
+    val id: Long,
+    @SerialName("text")
+    val text: String,
+    @SerialName("answers")
     val answers: List<AnswerEntity>
 )
+
 

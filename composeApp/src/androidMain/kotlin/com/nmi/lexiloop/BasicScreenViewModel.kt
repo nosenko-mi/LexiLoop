@@ -10,6 +10,8 @@ import com.nmi.lexiloop.entity.CompleteQuizEntity
 import com.nmi.lexiloop.entity.QuizEntity
 import com.nmi.lexiloop.ml.srModel
 import com.nmi.lexiloop.record.AudioRecorder
+import com.nmi.lexiloop.util.NetworkError
+import com.nmi.lexiloop.util.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -24,6 +26,7 @@ class BasicScreenViewModel(
     val state: State<BasicScreenState> = _state
 
     init {
+//        loadCompleteQuizzes() // crashes app
         srModel.load()
     }
 
@@ -62,10 +65,20 @@ class BasicScreenViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             _state.value = _state.value.copy(isLoading = true, completeQuizzes = emptyList())
             try {
-                val completeQuizzes = sdk.getAllCompleteQuizzesCache()
-                _state.value =
-                    _state.value.copy(isLoading = false, completeQuizzes = completeQuizzes)
-            } catch (e: Exception) {
+                val completeQuizzes = sdk.getAllQuizzes(forceReload = true)
+                when (completeQuizzes){
+                    is Result.Error -> {
+                        Log.d("BasicScreenViewModel", "loadCompleteQuiz ERROR: ${completeQuizzes.error}")
+                        _state.value =
+                            _state.value.copy(errorMessage = completeQuizzes.error, isLoading = false, completeQuizzes = emptyList())
+                    }
+                    is Result.Success -> {
+                        Log.d("BasicScreenViewModel", "loadCompleteQuiz SUCCESS")
+                        _state.value =
+                            _state.value.copy(errorMessage = null, isLoading = false, completeQuizzes = completeQuizzes.data)
+                    }
+                }
+            } catch (e: Exception) { // possible coroutine bug
                 Log.e("BasicScreenViewModel", e.printStackTrace().toString())
                 _state.value = _state.value.copy(isLoading = false, completeQuizzes = emptyList())
             }
@@ -83,10 +96,10 @@ class BasicScreenViewModel(
                     val answerId = System.currentTimeMillis()
                     answers.add(
                         AnswerEntity(
-                            answerId,
-                            quizId,
-                            "random answer $answerId",
-                            i == randomIndex
+                            id=answerId,
+                            quizId = quizId,
+                            text = "random answer $answerId",
+                            isCorrect = i == randomIndex
                         )
                     )
                 }
@@ -111,5 +124,6 @@ data class BasicScreenState(
     val completeQuizzes: List<CompleteQuizEntity> = emptyList(),
     val permissionDialogVisible: Boolean = false,
     val isRecording: Boolean = false,
-    val recognizedText: String = "init value"
+    val recognizedText: String = "init value",
+    val errorMessage: NetworkError? = null
 )

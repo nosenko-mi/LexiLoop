@@ -13,10 +13,12 @@ androidx-test-junit = "1.2.1"
 compose-plugin = "1.6.11"
 junit = "4.13.2"
 kotlin = "2.0.0"
+coroutines = "2.0.0"
 
 coroutinesVersion = "1.7.3"
 dateTimeVersion = "0.6.0"
 koin = "3.5.3"
+kotlinGradlePlugin = "2.0.0"
 ktor = "2.3.7"
 sqlDelight = "2.0.0"
 lifecycleViewmodelCompose = "2.7.0"
@@ -24,8 +26,11 @@ material3 = "1.2.0"
 mokoResources = "0.24.1"
 pytorch="2.1.0"
 accompanistPermissions="0.34.0"
+buildKonfig="0.15.1"
 
 [libraries]
+buildkonfig-gradle-plugin = { module = "com.codingfeline.buildkonfig:buildkonfig-gradle-plugin", version.ref = "buildKonfig" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -40,13 +45,14 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutinesVersion" }
+#kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "dateTimeVersion" }
 
-#ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" } # android
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" } # ios
-ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" } # jvm + android
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" } # jvm
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
@@ -76,3 +82,4 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
 mokoResourcesPlugin = { id = "dev.icerock.mobile.multiplatform-resources", version.ref="mokoResources"}
+buildKofnig = {id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig"}

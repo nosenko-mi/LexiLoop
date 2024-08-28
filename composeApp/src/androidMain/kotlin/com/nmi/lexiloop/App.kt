@@ -30,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.PackageManagerCompat.LOG_TAG
@@ -95,43 +96,50 @@ fun App() {
                 )
             }
 
-            Text(text = state.recognizedText)
-
-            Button(onClick = {
-                if (state.isRecording) {
-                    // stop recognition or smt
-                    viewModel.stopRecognition()
-                    return@Button
-                }
-                when (recordPermissionState.status) {
-                    PermissionStatus.Granted -> {
-                        // start record
-
-                        viewModel.recognize6Seconds()
-                    }
-                    else -> {
-                        permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
-                    }
-                }
-            }) {
-                Text(text = "recognize")
-            }
+//            Text(text = state.recognizedText)
+//
+//            Button(onClick = {
+//                if (state.isRecording) {
+//                    // stop recognition or smt
+//                    viewModel.stopRecognition()
+//                    return@Button
+//                }
+//                when (recordPermissionState.status) {
+//                    PermissionStatus.Granted -> {
+//                        // start record
+//
+//                        viewModel.recognize6Seconds()
+//                    }
+//                    else -> {
+//                        permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+//                    }
+//                }
+//            }) {
+//                Text(text = "recognize")
+//            }
 
 //            if (state.quizzes.isNotEmpty()){
 //                Quizzes(state.quizzes)
 //            }
 //
-//            if (state.completeQuizzes.isNotEmpty()){
-//                CompleteQuizzes(state.completeQuizzes)
-//            }
+            if (state.completeQuizzes.isNotEmpty()){
+                CompleteQuizzes(state.completeQuizzes)
+            }
+
+            state.errorMessage?.let {
+                Text(
+                    text = it.name,
+                    color = Color.Red
+                )
+            }
 
 //            Button(onClick = { viewModel.insertRandomCompleteQuiz() }) {
 //                Text(text = "insert random quiz")
 //            }
 
-//            Button(onClick = { viewModel.loadCompleteQuizzes() }) {
-//                Text(text = " get complete quizzes")
-//            }
+            Button(onClick = { viewModel.loadCompleteQuizzes() }) {
+                Text(text = " get complete quizzes")
+            }
         }
     }
 }
@@ -149,7 +157,7 @@ fun Quizzes(quizzes: List<QuizEntity>) {
 fun CompleteQuizzes(quizzes: List<CompleteQuizEntity>) {
     LazyColumn {
         items(quizzes) { q ->
-            Text("${q.quiz.id}: ${q.answers.forEach { it.text }}")
+            Text("${q.id}: ${q.answers.forEach { it.text }}")
         }
     }
 }
