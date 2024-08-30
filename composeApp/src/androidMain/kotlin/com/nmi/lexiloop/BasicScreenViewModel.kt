@@ -9,6 +9,7 @@ import com.nmi.lexiloop.entity.AnswerEntity
 import com.nmi.lexiloop.entity.CompleteQuizEntity
 import com.nmi.lexiloop.entity.QuizEntity
 import com.nmi.lexiloop.ml.srModel
+import com.nmi.lexiloop.model.SimpleQuizModel
 import com.nmi.lexiloop.record.AudioRecorder
 import com.nmi.lexiloop.util.NetworkError
 import com.nmi.lexiloop.util.Result
@@ -30,7 +31,7 @@ class BasicScreenViewModel(
         srModel.load()
     }
 
-    fun recognize6Seconds(){
+    fun recognize6Seconds() {
         viewModelScope.launch {
             _state.value = _state.value.copy(recognizedText = "recognizing...", isRecording = true)
             val buffer = recorder.recordXSeconds(6)
@@ -39,11 +40,11 @@ class BasicScreenViewModel(
         }
     }
 
-    fun stopRecognition(){
+    fun stopRecognition() {
         _state.value = _state.value.copy(recognizedText = "stopped", isRecording = false)
     }
 
-    fun updatePermissionDialogVisibility(visibility: Boolean){
+    fun updatePermissionDialogVisibility(visibility: Boolean) {
         _state.value = _state.value.copy(permissionDialogVisible = visibility)
     }
 
@@ -65,52 +66,33 @@ class BasicScreenViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             _state.value = _state.value.copy(isLoading = true, completeQuizzes = emptyList())
             try {
-                val completeQuizzes = sdk.getAllQuizzes(forceReload = true)
-                when (completeQuizzes){
+//                val completeQuizzes = sdk.getAllQuizzes(forceReload = true)
+                val completeQuizzes = sdk.getSimpleQuizzes(limit = 10, forceReload = true)
+                when (completeQuizzes) {
                     is Result.Error -> {
-                        Log.d("BasicScreenViewModel", "loadCompleteQuiz ERROR: ${completeQuizzes.error}")
+                        Log.d(
+                            "BasicScreenViewModel",
+                            "loadCompleteQuiz ERROR: ${completeQuizzes.error}"
+                        )
                         _state.value =
-                            _state.value.copy(errorMessage = completeQuizzes.error, isLoading = false, completeQuizzes = emptyList())
+                            _state.value.copy(
+                                errorMessage = completeQuizzes.error,
+                                isLoading = false,
+                                completeQuizzes = emptyList()
+                            )
                     }
+
                     is Result.Success -> {
                         Log.d("BasicScreenViewModel", "loadCompleteQuiz SUCCESS")
                         _state.value =
-                            _state.value.copy(errorMessage = null, isLoading = false, completeQuizzes = completeQuizzes.data)
+                            _state.value.copy(
+                                errorMessage = null,
+                                isLoading = false,
+                                completeQuizzes = completeQuizzes.data
+                            )
                     }
                 }
             } catch (e: Exception) { // possible coroutine bug
-                Log.e("BasicScreenViewModel", e.printStackTrace().toString())
-                _state.value = _state.value.copy(isLoading = false, completeQuizzes = emptyList())
-            }
-        }
-    }
-
-    fun insertRandomCompleteQuiz() {
-        viewModelScope.launch {
-            _state.value = _state.value.copy(isLoading = true, completeQuizzes = emptyList())
-            try {
-                val quizId = System.currentTimeMillis()
-                val answers: MutableList<AnswerEntity> = mutableListOf()
-                val randomIndex = Random.nextInt(0, 4)
-                for (i in 1..4) {
-                    val answerId = System.currentTimeMillis()
-                    answers.add(
-                        AnswerEntity(
-                            id=answerId,
-                            quizId = quizId,
-                            text = "random answer $answerId",
-                            isCorrect = i == randomIndex
-                        )
-                    )
-                }
-                sdk.insertCompleteQuiz(
-                    QuizEntity(quizId, 1L,"random quiz $quizId"),
-                    answers
-                )
-                val completeQuizzes = sdk.getAllCompleteQuizzesCache()
-                _state.value =
-                    _state.value.copy(isLoading = false, completeQuizzes = completeQuizzes)
-            } catch (e: Exception) {
                 Log.e("BasicScreenViewModel", e.printStackTrace().toString())
                 _state.value = _state.value.copy(isLoading = false, completeQuizzes = emptyList())
             }
@@ -121,7 +103,7 @@ class BasicScreenViewModel(
 data class BasicScreenState(
     val isLoading: Boolean = false,
     val quizzes: List<QuizEntity> = emptyList(),
-    val completeQuizzes: List<CompleteQuizEntity> = emptyList(),
+    val completeQuizzes: List<SimpleQuizModel> = emptyList(),
     val permissionDialogVisible: Boolean = false,
     val isRecording: Boolean = false,
     val recognizedText: String = "init value",

@@ -39,6 +39,7 @@ import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import com.nmi.lexiloop.entity.CompleteQuizEntity
 import com.nmi.lexiloop.entity.QuizEntity
+import com.nmi.lexiloop.model.SimpleQuizModel
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -154,10 +155,10 @@ fun Quizzes(quizzes: List<QuizEntity>) {
 }
 
 @Composable
-fun CompleteQuizzes(quizzes: List<CompleteQuizEntity>) {
+fun CompleteQuizzes(quizzes: List<SimpleQuizModel>) {
     LazyColumn {
         items(quizzes) { q ->
-            Text("${q.id}: ${q.answers.forEach { it.text }}")
+            Text(q.toString())
         }
     }
 }
