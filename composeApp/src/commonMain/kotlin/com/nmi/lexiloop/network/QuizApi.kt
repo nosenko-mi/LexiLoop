@@ -2,8 +2,8 @@ package com.nmi.lexiloop.network
 
 import com.nmi.lexiloop.BuildKonfig
 import com.nmi.lexiloop.entity.CompleteQuizEntity
-import com.nmi.lexiloop.util.NetworkError
 import com.nmi.lexiloop.util.Result
+import com.nmi.lexiloop.util.NetworkError
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
