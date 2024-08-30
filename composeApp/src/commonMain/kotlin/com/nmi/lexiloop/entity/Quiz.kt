@@ -1,5 +1,8 @@
 package com.nmi.lexiloop.entity
 
+import com.nmi.lexiloop.model.QuizType
+import com.nmi.lexiloop.model.SimpleQuizModel
+import com.nmi.lexiloop.model.toQuizType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -56,3 +59,11 @@ data class SequenceQuizEntity(
     @SerialName("answers")
     val answers: List<SequenceAnswerEntity>
 ) : AbstractQuiz()
+
+fun CompleteQuizEntity.toModel(): SimpleQuizModel {
+    return SimpleQuizModel(
+        type=this.typeId.toQuizType(),
+        text = this.text,
+        answers = this.answers.map { it.toAnswerModel() }
+    )
+}
