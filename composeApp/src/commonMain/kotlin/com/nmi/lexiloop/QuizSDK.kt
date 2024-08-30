@@ -50,8 +50,8 @@ class QuizSDK(databaseDriverFactory: DatabaseDriverFactory, val api: QuizApi) {
     }
 
     @Throws(Exception::class)
-    suspend fun insertQuiz(quizId: Long, quizText: String) {
-        val result = database.insertQuiz(quizId, quizText)
+    suspend fun insertQuiz(quizId: Long, typeId: Long, quizText: String) {
+        val result = database.insertQuiz(quizId, typeId, quizText)
     }
 
     @Throws(Exception::class)

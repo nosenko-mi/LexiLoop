@@ -19,6 +19,7 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
             quizzes.forEach { quiz ->
                 dbQuery.insertQuiz(
                     id = quiz.id,
+                    type_id = quiz.typeId,
                     quiz_text = quiz.text
                 )
             }
@@ -37,16 +38,16 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
         quizzes.forEach { quiz ->
             val a = answers.getOrElse(quiz.id) { null }
             if (a != null) {
-                completeQuizzes.add(CompleteQuizEntity(quiz.id, quiz.text, a))
+                completeQuizzes.add(CompleteQuizEntity(quiz.id, quiz.typeId, quiz.text, a))
             }
         }
 
         return completeQuizzes
     }
 
-    internal fun insertQuiz(id: Long, text: String): Result<Unit> {
+    internal fun insertQuiz(id: Long, typeId: Long, text: String): Result<Unit> {
         val result = dbQuery.runCatching {
-            dbQuery.insertQuiz(id, text)
+            dbQuery.insertQuiz(id, typeId, text)
         }
         return result
     }
@@ -65,7 +66,7 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
 
     internal fun insertCompleteQuiz(quiz: QuizEntity, answers: List<AnswerEntity>) {
         dbQuery.transaction {
-            dbQuery.insertQuiz(quiz.id, quiz.text)
+            dbQuery.insertQuiz(quiz.id, quiz.typeId, quiz.text)
             answers.forEach {
                 dbQuery.insertAnswer(it.id, it.text, it.isCorrect, it.quizId)
             }
@@ -74,9 +75,10 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
 
     private fun mapQuiz(
         id: Long,
+        typeId: Long,
         text: String,
     ): QuizEntity {
-        return QuizEntity(id, text)
+        return QuizEntity(id, typeId, text)
     }
 
     private fun mapAnswer(

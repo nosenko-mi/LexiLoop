@@ -2,6 +2,7 @@ import kotlin.Boolean;
 
 CREATE TABLE Quiz (
     id INTEGER  PRIMARY KEY NOT NULL,
+    type_id INTEGER NOT NULL,
     quiz_text TEXT NOT NULL
 );
 
@@ -14,8 +15,8 @@ CREATE TABLE Answer (
 );
 
 insertQuiz:
-INSERT INTO Quiz(id, quiz_text)
-VALUES(?, ?);
+INSERT INTO Quiz(id, type_id, quiz_text)
+VALUES(?, ?, ?);
 
 insertAnswer:
 INSERT INTO Answer(id, answer_text, is_correct, quiz_id)

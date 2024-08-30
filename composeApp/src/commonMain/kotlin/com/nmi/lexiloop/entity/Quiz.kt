@@ -11,6 +11,8 @@ abstract class AbstractQuiz
 data class QuizEntity(
     @SerialName("id")
     val id: Long,
+    @SerialName("type_id")
+    val typeId: Long,
     @SerialName("text")
     val text: String,
 //    @SerialName("answers")
@@ -22,6 +24,8 @@ data class QuizEntity(
 data class CompleteQuizEntity(
     @SerialName("id")
     val id: Long,
+    @SerialName("type_id")
+    val typeId: Long,
     @SerialName("text")
     val text: String,
     @SerialName("answers")
@@ -32,6 +36,8 @@ data class CompleteQuizEntity(
 data class VoiceQuizEntity(
     @SerialName("id")
     val id: Long,
+    @SerialName("type_id")
+    val typeId: Long,
     @SerialName("text")
     val text: String,
     @SerialName("expected_text")
@@ -43,6 +49,8 @@ data class VoiceQuizEntity(
 data class SequenceQuizEntity(
     @SerialName("id")
     val id: Long,
+    @SerialName("type_id")
+    val typeId: Long,
     @SerialName("text")
     val text: String,
     @SerialName("answers")

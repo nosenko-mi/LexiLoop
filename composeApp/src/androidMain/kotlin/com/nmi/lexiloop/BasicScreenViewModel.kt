@@ -104,7 +104,7 @@ class BasicScreenViewModel(
                     )
                 }
                 sdk.insertCompleteQuiz(
-                    QuizEntity(quizId, "random quiz $quizId"),
+                    QuizEntity(quizId, 1L,"random quiz $quizId"),
                     answers
                 )
                 val completeQuizzes = sdk.getAllCompleteQuizzesCache()
