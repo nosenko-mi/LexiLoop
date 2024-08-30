@@ -1,5 +1,6 @@
 package com.nmi.lexiloop.entity
 
+import com.nmi.lexiloop.model.SimpleAnswerModel
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -28,3 +29,7 @@ data class SequenceAnswerEntity(
     @SerialName("quiz_id")
     val quizId: Long,
 )
+
+fun AnswerEntity.toAnswerModel(): SimpleAnswerModel {
+    return SimpleAnswerModel(text = this.text, isCorrect = this.isCorrect)
+}
