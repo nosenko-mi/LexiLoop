@@ -22,7 +22,7 @@ class QuizApi(
                 url{
                     protocol = URLProtocol.HTTP
                     host = BuildKonfig.API_URL
-                    path("api/quizzes/simple")
+                    path("api/quiz/simple")
                 }
             }
         } catch (e: UnresolvedAddressException){
