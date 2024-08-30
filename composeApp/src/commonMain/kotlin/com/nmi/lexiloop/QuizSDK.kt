@@ -6,6 +6,9 @@ import com.nmi.lexiloop.cache.Quiz
 import com.nmi.lexiloop.entity.AnswerEntity
 import com.nmi.lexiloop.entity.CompleteQuizEntity
 import com.nmi.lexiloop.entity.QuizEntity
+import com.nmi.lexiloop.entity.toModel
+import com.nmi.lexiloop.model.SimpleAnswerModel
+import com.nmi.lexiloop.model.SimpleQuizModel
 import com.nmi.lexiloop.network.QuizApi
 import com.nmi.lexiloop.util.NetworkError
 import com.nmi.lexiloop.util.Result
@@ -21,6 +24,18 @@ class QuizSDK(databaseDriverFactory: DatabaseDriverFactory, val api: QuizApi) {
             Result.Success(cachedQuizzes)
         } else {
             api.getAllQuizzes().also {
+//                database.clearAndCreateQuizzes(it)
+            }
+        }
+    }
+
+    @Throws(Exception::class)
+    suspend fun getSimpleQuizzes(limit: Int, forceReload: Boolean): Result<List<SimpleQuizModel>, NetworkError> {
+        val cachedQuizzes = database.getCompleteQuizzes()
+        return if (cachedQuizzes.isNotEmpty() && !forceReload) {
+            Result.Success(cachedQuizzes.map { it.toModel() })
+        } else {
+            api.getSimpleQuizzes(limit).also {
 //                database.clearAndCreateQuizzes(it)
             }
         }
