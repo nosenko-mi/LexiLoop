@@ -3,12 +3,8 @@ package com.nmi.lexiloop
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.media.AudioFormat
-import android.media.AudioRecord
-import android.media.MediaRecorder
 import android.net.Uri
 import android.provider.Settings
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
@@ -33,11 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.PackageManagerCompat.LOG_TAG
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
-import com.nmi.lexiloop.entity.CompleteQuizEntity
 import com.nmi.lexiloop.entity.QuizEntity
 import com.nmi.lexiloop.model.QuizType
 import com.nmi.lexiloop.model.SimpleQuizModel
