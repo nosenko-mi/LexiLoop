@@ -39,7 +39,10 @@ import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import com.nmi.lexiloop.entity.CompleteQuizEntity
 import com.nmi.lexiloop.entity.QuizEntity
+import com.nmi.lexiloop.model.QuizType
 import com.nmi.lexiloop.model.SimpleQuizModel
+import com.nmi.lexiloop.presentation.common.QuizCard
+import com.nmi.lexiloop.presentation.common.StartQuizCard
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -138,6 +141,10 @@ fun App() {
 //                Text(text = "insert random quiz")
 //            }
 
+            StartQuizCard(text = "Start quiz", quizType = QuizType.Simple, modifier = Modifier) { }
+            StartQuizCard(text = "Start quiz", quizType = QuizType.Voice, modifier = Modifier) { }
+            StartQuizCard(text = "Start quiz", quizType = QuizType.Sequence, modifier = Modifier) { }
+
             Button(onClick = { viewModel.loadCompleteQuizzes() }) {
                 Text(text = " get complete quizzes")
             }
@@ -158,7 +165,8 @@ fun Quizzes(quizzes: List<QuizEntity>) {
 fun CompleteQuizzes(quizzes: List<SimpleQuizModel>) {
     LazyColumn {
         items(quizzes) { q ->
-            Text(q.toString())
+//            Text(q.toString())
+            QuizCard(quiz = q, modifier = Modifier.fillMaxWidth())
         }
     }
 }

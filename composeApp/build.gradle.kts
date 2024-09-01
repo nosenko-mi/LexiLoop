@@ -72,6 +72,9 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.pytorch.android)
             implementation(libs.accompanist.permissions)
+
+            implementation(libs.androidx.ui.text.google.fonts)
+            implementation(libs.material.icons.extended)
         }
 
         desktopMain.dependencies {
