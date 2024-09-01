@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
+import com.nmi.lexiloop.presentation.ui.theme.LexiLoopAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,7 +18,9 @@ class MainActivity : ComponentActivity() {
             0
         )
         setContent {
-            App()
+            LexiLoopAppTheme {
+                App()
+            }
         }
     }
 }
