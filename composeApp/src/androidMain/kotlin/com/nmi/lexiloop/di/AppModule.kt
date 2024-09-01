@@ -1,5 +1,7 @@
-package com.nmi.lexiloop
+package com.nmi.lexiloop.di
 
+import com.nmi.lexiloop.BasicScreenViewModel
+import com.nmi.lexiloop.QuizSDK
 import com.nmi.lexiloop.cache.AndroidDatabaseDriverFactory
 import com.nmi.lexiloop.network.QuizApi
 import com.nmi.lexiloop.network.createHttpClient
