@@ -11,6 +11,7 @@ androidx-espresso-core = "3.6.1"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
 compose-plugin = "1.6.11"
+android-compose = "1.6.8"
 junit = "4.13.2"
 kotlin = "2.0.0"
 coroutines = "2.0.0"
@@ -27,6 +28,7 @@ mokoResources = "0.24.1"
 pytorch="2.1.0"
 accompanistPermissions="0.34.0"
 buildKonfig="0.15.1"
+uiTextGoogleFonts = "1.6.8"
 
 [libraries]
 buildkonfig-gradle-plugin = { module = "com.codingfeline.buildkonfig:buildkonfig-gradle-plugin", version.ref = "buildKonfig" }
@@ -41,7 +43,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-material = { group = "com.google.android.material", name = "material", version.ref = "androidx-material" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
-
+material-icons-extended = {module = "androidx.compose.material:material-icons-extended", version.ref = "android-compose"}
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutinesVersion" }
@@ -70,6 +72,7 @@ moko-resources-test = {group="dev.icerock.moko", name = "resources-test", versio
 
 pytorch-android = {group="org.pytorch", name="pytorch_android_lite", version.ref="pytorch"}
 accompanist-permissions = {group="com.google.accompanist", name="accompanist-permissions", version.ref="accompanistPermissions"}
+androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 
 
 [plugins]
