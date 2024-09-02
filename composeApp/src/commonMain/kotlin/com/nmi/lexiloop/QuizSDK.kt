@@ -2,13 +2,11 @@ package com.nmi.lexiloop
 
 import com.nmi.lexiloop.cache.Database
 import com.nmi.lexiloop.cache.DatabaseDriverFactory
-import com.nmi.lexiloop.cache.Quiz
 import com.nmi.lexiloop.entity.AnswerEntity
 import com.nmi.lexiloop.entity.CompleteQuizEntity
 import com.nmi.lexiloop.entity.QuizEntity
 import com.nmi.lexiloop.entity.toModel
-import com.nmi.lexiloop.model.SimpleAnswerModel
-import com.nmi.lexiloop.model.SimpleQuizModel
+import com.nmi.lexiloop.model.quiz.SimpleQuizModel
 import com.nmi.lexiloop.network.QuizApi
 import com.nmi.lexiloop.util.NetworkError
 import com.nmi.lexiloop.util.Result
