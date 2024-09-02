@@ -1,6 +1,6 @@
 package com.nmi.lexiloop.entity
 
-import com.nmi.lexiloop.model.SimpleAnswerModel
+import com.nmi.lexiloop.model.quiz.SimpleAnswerModel
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

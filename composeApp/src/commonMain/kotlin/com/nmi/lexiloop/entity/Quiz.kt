@@ -1,8 +1,7 @@
 package com.nmi.lexiloop.entity
 
-import com.nmi.lexiloop.model.QuizType
-import com.nmi.lexiloop.model.SimpleQuizModel
-import com.nmi.lexiloop.model.toQuizType
+import com.nmi.lexiloop.model.quiz.SimpleQuizModel
+import com.nmi.lexiloop.model.quiz.toQuizType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

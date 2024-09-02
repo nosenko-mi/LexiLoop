@@ -1,4 +1,4 @@
-package com.nmi.lexiloop.model
+package com.nmi.lexiloop.model.quiz
 
 abstract class BasicQuiz {
     abstract val type: QuizType

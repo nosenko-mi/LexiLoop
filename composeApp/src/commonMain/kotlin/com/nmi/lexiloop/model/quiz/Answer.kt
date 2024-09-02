@@ -1,4 +1,4 @@
-package com.nmi.lexiloop.model
+package com.nmi.lexiloop.model.quiz
 
 
 data class SimpleAnswerModel(
