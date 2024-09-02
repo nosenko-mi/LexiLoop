@@ -4,10 +4,14 @@ import android.Manifest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.activity.enableEdgeToEdge
 import androidx.core.app.ActivityCompat
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.nmi.lexiloop.presentation.home.HomeScreen
 import com.nmi.lexiloop.presentation.ui.theme.LexiLoopAppTheme
+import kotlinx.serialization.Serializable
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,16 +21,22 @@ class MainActivity : ComponentActivity() {
             arrayOf(Manifest.permission.RECORD_AUDIO),
             0
         )
+        enableEdgeToEdge()
         setContent {
             LexiLoopAppTheme {
-                App()
+                val navController = rememberNavController()
+                NavHost(
+                    navController = navController,
+                    startDestination = HomeNavigationScreen
+                ) {
+                    composable<HomeNavigationScreen> {
+                        HomeScreen()
+                    }
+                }
             }
         }
     }
 }
 
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    App()
-}
+@Serializable
+object HomeNavigationScreen
