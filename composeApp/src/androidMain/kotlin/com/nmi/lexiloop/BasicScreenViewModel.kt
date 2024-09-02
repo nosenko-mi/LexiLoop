@@ -5,17 +5,14 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nmi.lexiloop.entity.AnswerEntity
-import com.nmi.lexiloop.entity.CompleteQuizEntity
 import com.nmi.lexiloop.entity.QuizEntity
 import com.nmi.lexiloop.ml.srModel
-import com.nmi.lexiloop.model.SimpleQuizModel
+import com.nmi.lexiloop.model.quiz.SimpleQuizModel
 import com.nmi.lexiloop.record.AudioRecorder
 import com.nmi.lexiloop.util.NetworkError
 import com.nmi.lexiloop.util.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 // context injection
 // https://stackoverflow.com/questions/53439111/how-to-inject-application-context-from-app-module-to-network-module-using-ko
