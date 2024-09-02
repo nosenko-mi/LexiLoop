@@ -5,6 +5,7 @@ import com.nmi.lexiloop.QuizSDK
 import com.nmi.lexiloop.cache.AndroidDatabaseDriverFactory
 import com.nmi.lexiloop.network.QuizApi
 import com.nmi.lexiloop.network.createHttpClient
+import com.nmi.lexiloop.presentation.home.HomeScreenViewModel
 import com.nmi.lexiloop.record.AndroidAudioRecorder
 import com.nmi.lexiloop.record.AudioRecorder
 import io.ktor.client.engine.okhttp.OkHttp
@@ -26,5 +27,6 @@ val appModule = module {
         )
     }
     viewModel { BasicScreenViewModel(sdk = get(), recorder = get()) }
+    viewModel { HomeScreenViewModel(sdk = get()) }
 }
 
