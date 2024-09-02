@@ -12,6 +12,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.RecordVoiceOver
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -25,8 +26,71 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.nmi.lexiloop.model.QuizType
+import com.nmi.lexiloop.model.quiz.QuizType
 import com.nmi.lexiloop.presentation.ui.theme.spacing
+
+
+@Preview
+@Composable
+fun StartCompilationQuizCard(
+    modifier: Modifier = Modifier,
+    text: String = "Title text",
+    icon: ImageVector = Icons.Default.Share,
+    onClick: () -> Unit = {}
+) {
+    OutlinedCard(
+        onClick = { onClick() },
+        colors = CardColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            disabledContentColor = MaterialTheme.colorScheme.onSurface,
+            disabledContainerColor = MaterialTheme.colorScheme.surfaceDim
+        ),
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
+        // Apply padding to Box children only.
+        // Icon in background should be offset
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .heightIn(0.dp, 175.dp)
+                .widthIn(0.dp, 320.dp) // not sure about 320
+                .clip(RectangleShape)
+        ) {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = modifier
+                    .align(
+                        Alignment.TopStart
+                    )
+                    .padding(MaterialTheme.spacing.medium)
+            )
+            Icon(
+                imageVector = Icons.AutoMirrored.Default.ArrowForward,
+                contentDescription = text,
+                modifier = modifier
+                    .align(
+                        Alignment.BottomEnd
+                    )
+                    .padding(MaterialTheme.spacing.medium)
+
+            )
+            Icon(
+                imageVector = icon,
+                contentDescription = "",
+                modifier = modifier
+                    .align(Alignment.TopEnd)
+                    .alpha(0.05f)
+                    .size(256.dp)
+                    .absoluteOffset(x = 64.dp, y = (-32).dp) // questionable position, ok for now
+
+            )
+        }
+    }
+}
+
 
 @Preview
 @Composable
@@ -40,7 +104,6 @@ fun StartQuizCard(
         onClick = { onClick() },
         modifier = modifier
             .fillMaxWidth()
-            .padding(MaterialTheme.spacing.medium)
     ) {
         // Apply padding to Box children only.
         // Icon in background should be offset
@@ -76,8 +139,8 @@ fun StartQuizCard(
                 modifier = modifier
                     .align(Alignment.TopEnd)
                     .alpha(0.05f)
-                    .size(256.dp)
-                    .absoluteOffset(x = 64.dp, y = (-32).dp) // questionable position, ok for now
+                    .size(128.dp)
+                    .absoluteOffset(x = 32.dp, y = (-16).dp) // questionable position, ok for now
 
             )
         }
