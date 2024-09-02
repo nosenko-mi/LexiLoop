@@ -32,8 +32,8 @@ import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import com.nmi.lexiloop.entity.QuizEntity
-import com.nmi.lexiloop.model.QuizType
-import com.nmi.lexiloop.model.SimpleQuizModel
+import com.nmi.lexiloop.model.quiz.QuizType
+import com.nmi.lexiloop.model.quiz.SimpleQuizModel
 import com.nmi.lexiloop.presentation.common.StartQuizCard
 import org.koin.androidx.compose.koinViewModel
 
