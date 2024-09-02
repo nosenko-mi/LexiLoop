@@ -75,6 +75,8 @@ kotlin {
 
             implementation(libs.androidx.ui.text.google.fonts)
             implementation(libs.material.icons.extended)
+            implementation(libs.navigation.compose)
+            implementation(libs.kotlinx.serialization.json)
         }
 
         desktopMain.dependencies {
