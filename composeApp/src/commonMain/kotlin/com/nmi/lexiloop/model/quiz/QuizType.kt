@@ -1,4 +1,4 @@
-package com.nmi.lexiloop.model
+package com.nmi.lexiloop.model.quiz
 
 sealed class QuizType {
     data object Simple : QuizType()
