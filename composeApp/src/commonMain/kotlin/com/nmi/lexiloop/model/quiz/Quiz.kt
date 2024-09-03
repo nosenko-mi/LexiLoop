@@ -8,10 +8,11 @@ abstract class BasicQuiz {
 }
 
 data class SimpleQuizModel(
-    override val type: QuizType,
     override val text: String,
     val answers: List<SimpleAnswerModel>
 ) : BasicQuiz() {
+    override val type: QuizType
+        get() = QuizType.Simple
 
     override fun getBlankPosition(): Int {
         for (i in text.indices){
@@ -26,10 +27,11 @@ data class SimpleQuizModel(
 }
 
 data class SequenceQuizModel(
-    override val type: QuizType,
     override val text: String,
     val answers: List<SequenceAnswerModel>
 ) : BasicQuiz() {
+    override val type: QuizType
+        get() = QuizType.Sequence
 
     override fun getBlankPosition(): Int {
         return -1
@@ -41,10 +43,11 @@ data class SequenceQuizModel(
 }
 
 data class VoiceQuizModel(
-    override val type: QuizType,
     override val text: String,
     val expectedText: String
 ) : BasicQuiz() {
+    override val type: QuizType
+        get() = QuizType.Voice
 
     override fun getBlankPosition(): Int {
         return -1
