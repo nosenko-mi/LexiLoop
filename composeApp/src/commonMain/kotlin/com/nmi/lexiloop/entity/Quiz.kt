@@ -1,7 +1,6 @@
 package com.nmi.lexiloop.entity
 
 import com.nmi.lexiloop.model.quiz.SimpleQuizModel
-import com.nmi.lexiloop.model.quiz.toQuizType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -59,9 +58,9 @@ data class SequenceQuizEntity(
     val answers: List<SequenceAnswerEntity>
 ) : AbstractQuiz()
 
+// TODO think about quiz factory
 fun CompleteQuizEntity.toModel(): SimpleQuizModel {
     return SimpleQuizModel(
-        type=this.typeId.toQuizType(),
         text = this.text,
         answers = this.answers.map { it.toAnswerModel() }
     )
