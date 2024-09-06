@@ -9,6 +9,7 @@ import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.nmi.lexiloop.presentation.feedback.FeedbackScreen
 import com.nmi.lexiloop.presentation.home.HomeScreen
 import com.nmi.lexiloop.presentation.ui.theme.LexiLoopAppTheme
 import kotlinx.serialization.Serializable
@@ -27,10 +28,14 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(
                     navController = navController,
-                    startDestination = HomeNavigationScreen
+                    startDestination = FeedbackNavigationScreen
                 ) {
                     composable<HomeNavigationScreen> {
                         HomeScreen()
+                    }
+
+                    composable<FeedbackNavigationScreen> {
+                        FeedbackScreen()
                     }
                 }
             }
@@ -40,3 +45,6 @@ class MainActivity : ComponentActivity() {
 
 @Serializable
 object HomeNavigationScreen
+
+@Serializable
+object FeedbackNavigationScreen
