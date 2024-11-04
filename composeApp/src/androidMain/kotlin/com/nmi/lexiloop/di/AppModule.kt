@@ -7,6 +7,7 @@ import com.nmi.lexiloop.network.QuizApi
 import com.nmi.lexiloop.network.createHttpClient
 import com.nmi.lexiloop.presentation.feedback.FeedbackScreenViewModel
 import com.nmi.lexiloop.presentation.home.HomeScreenViewModel
+import com.nmi.lexiloop.presentation.quiz_session.QuizSessionViewModel
 import com.nmi.lexiloop.record.AndroidAudioRecorder
 import com.nmi.lexiloop.record.AudioRecorder
 import io.ktor.client.engine.okhttp.OkHttp
@@ -30,5 +31,6 @@ val appModule = module {
     viewModel { BasicScreenViewModel(sdk = get(), recorder = get()) }
     viewModel { HomeScreenViewModel(sdk = get()) }
     viewModel { FeedbackScreenViewModel() }
+    viewModel { QuizSessionViewModel() }
 }
 
