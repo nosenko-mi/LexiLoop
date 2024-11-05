@@ -270,7 +270,7 @@ fun LexiLoopAppTheme(
         else -> lightScheme
     }
 
-    CompositionLocalProvider(LocalSpacing provides Spacing()){
+    CompositionLocalProvider(LocalSpacing provides Spacing(), LocalCorners provides Corners()){
         MaterialTheme(
             colorScheme = colorScheme,
             typography = AppTypography,
