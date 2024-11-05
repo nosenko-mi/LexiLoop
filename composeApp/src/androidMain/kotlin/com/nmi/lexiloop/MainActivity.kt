@@ -11,8 +11,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.nmi.lexiloop.presentation.feedback.FeedbackScreen
 import com.nmi.lexiloop.presentation.home.HomeScreen
+import com.nmi.lexiloop.presentation.quiz_session.QuizSessionScreen
 import com.nmi.lexiloop.presentation.ui.theme.LexiLoopAppTheme
-import kotlinx.serialization.Serializable
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,14 +28,20 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(
                     navController = navController,
-                    startDestination = FeedbackNavigationScreen
+                    startDestination = Route.QuizSessionNavigationScreen
                 ) {
-                    composable<HomeNavigationScreen> {
+                    composable<Route.HomeNavigationScreen> {
                         HomeScreen()
                     }
 
-                    composable<FeedbackNavigationScreen> {
+                    composable<Route.FeedbackNavigationScreen> {
                         FeedbackScreen()
+                    }
+
+                    composable<Route.QuizSessionNavigationScreen> {
+                        QuizSessionScreen(onCloseClick = {
+                            // exit session, pop backstack
+                        })
                     }
                 }
             }
@@ -43,8 +49,3 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Serializable
-object HomeNavigationScreen
-
-@Serializable
-object FeedbackNavigationScreen
