@@ -1,6 +1,8 @@
 package com.nmi.lexiloop.presentation.ui.theme
 import androidx.compose.ui.graphics.Color
 
+// TODO Extend colors like spacing: add colors for different quiz types, correct/wrong answers
+
 val primaryLight = Color(0xFF5C5891)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFE3DFFF)
