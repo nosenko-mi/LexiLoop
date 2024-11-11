@@ -17,6 +17,11 @@ data class Corners(
     val extraLarge: Dp = 25.dp,
 )
 
+//https://blog.designary.com/p/perfect-nested-rounded-corners
+fun Dp.cornerInnerRadius(outerThickness: Dp): Dp {
+    return this - (outerThickness/2)
+}
+
 val LocalCorners = compositionLocalOf { Corners() }
 
 val MaterialTheme.corners: Corners
