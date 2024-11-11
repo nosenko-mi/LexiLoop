@@ -16,6 +16,9 @@ class SimpleAnswerModel(
         return isChecked == isCorrect
     }
 
+    override fun toString(): String {
+        return "text=$text; isCorrect = $isCorrect; isChecked = $isChecked"
+    }
 }
 
 class SequenceAnswerModel(
